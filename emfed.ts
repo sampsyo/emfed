@@ -16,7 +16,7 @@ interface Toot {
 const TOOT_TMPL = `
 <li class="toot">
   <a class="user" href="{{user_url}}">
-    <img class="avatar" src="{{{avatar}}}">
+    <img class="avatar" width="46" height="46" src="{{{avatar}}}">
     <span class="display-name">{{display_name}}</span>
     <span class="username">@{{username}}</span>
   </a>
