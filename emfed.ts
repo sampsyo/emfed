@@ -29,13 +29,22 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
 
   // Construct the HTML content.
   const list = document.createElement("ol");
+  list.classList.add("mastodon-feed");
   element.replaceWith(list);
   for (const toot of toots) {
     const item = document.createElement("li");
     list.appendChild(item);
 
+    // Format date.
+    const dateStr = new Date(toot.created_at).toLocaleString();
+    const time = document.createElement("time");
+    time.setAttribute("datetime", toot.created_at);
+    time.textContent = dateStr;
+    item.appendChild(time);
+
     // Sanitize the post's body HTML to avoid XSS.
     const body = document.createElement("div");
+    body.classList.add("body");
     body.innerHTML = DOMPurify.sanitize(toot.content);
     item.appendChild(body);
   }
