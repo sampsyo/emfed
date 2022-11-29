@@ -9,7 +9,7 @@ interface Toot {
 
 document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   // Extract username from URL.
-  const userURL = new URL(element.href);
+  const userURL = new URL((element as HTMLAnchorElement).href);
   const parts = /@(\w+)$/.exec(userURL.pathname);
   if (!parts) {
     throw "not a Mastodon user URL";
