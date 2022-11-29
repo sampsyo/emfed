@@ -5,6 +5,11 @@ interface Toot {
   created_at: string;
   in_reply_to_id: string | null;
   content: string;
+  account: {
+    username: string;
+    display_name: string;
+    avatar: string;
+  };
 }
 
 document.querySelectorAll('a.mastodon-feed').forEach(async element => {
@@ -29,11 +34,28 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
 
   // Construct the HTML content.
   const list = document.createElement("ol");
-  list.classList.add("mastodon-feed");
+  list.classList.add("toots");
   element.replaceWith(list);
   for (const toot of toots) {
     const item = document.createElement("li");
+    item.classList.add("toot");
     list.appendChild(item);
+
+    // Avatar image.
+    const img = document.createElement("img");
+    img.classList.add("avatar");
+    img.setAttribute("src", toot.account.avatar);
+    item.appendChild(img);
+
+    // Display name.
+    const displayName = document.createElement("span");
+    displayName.classList.add("display-name");
+    displayName.textContent = toot.account.display_name;
+
+    // Username.
+    const userName = document.createElement("span");
+    userName.classList.add("user-name");
+    userName.textContent = '@' + toot.account.username;
 
     // Format date.
     const dateStr = new Date(toot.created_at).toLocaleString();
