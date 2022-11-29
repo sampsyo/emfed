@@ -1,37 +1,35 @@
+// Just the fields of toots that we need.
 interface Toot {
-  link: string;
-  ts: string;
-  body: string;
+  created_at: string;
+  in_reply_to_id: string | null;
+  content: string;
 }
 
 document.querySelectorAll('a.mastodon-feed').forEach(async element => {
-  // Generate RSS URL.
-  let url = new URL(element.href);
-  if (!/@\w+$/.exec(url.pathname)) {
+  // Extract username from URL.
+  const userURL = new URL(element.href);
+  const parts = /@(\w+)$/.exec(userURL.pathname);
+  if (!parts) {
     throw "not a Mastodon user URL";
   }
-  url.pathname += ".rss";
+  const username = parts[1];
 
-  // Fetch and parse RSS.
-  const res = await fetch(url);
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(await res.text(), "application/xml");
-  const toots: Toot[] = Array.prototype.map.call(
-    xml.getElementsByTagName("item"),
-    item => {
-      return {
-        link: item.getElementsByTagName("link")[0].textContent,
-        ts: item.getElementsByTagName("pubDate")[0].textContent,
-        body: item.getElementsByTagName("description")[0].textContent,
-      };
-    }
-  );
+  // Look up the user profile to get user ID.
+  let lookupURL = new URL(userURL);
+  lookupURL.pathname = "/api/v1/accounts/lookup";
+  lookupURL.search = `?acct=${username}`;
+  const userId: string = (await (await fetch(lookupURL)).json())["id"];
+
+  // Fetch toots.
+  let tootURL = new URL(userURL);
+  tootURL.pathname = `/api/v1/accounts/${userId}/statuses`;
+  const toots: Toot[] = await (await fetch(tootURL)).json();
 
   // Construct the HTML content.
   const list = document.createElement("ol");
   for (const toot of toots) {
     const item = document.createElement("li");
-    item.innerHTML = toot.body;  // Security problem?
+    item.innerHTML = toot.content;  // Security problem?
     list.appendChild(item);
   }
   element.replaceWith(list);
