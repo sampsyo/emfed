@@ -1,3 +1,5 @@
+import DOMPurify from "https://esm.sh/dompurify";
+
 // Just the fields of toots that we need.
 interface Toot {
   created_at: string;
@@ -29,7 +31,7 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   const list = document.createElement("ol");
   for (const toot of toots) {
     const item = document.createElement("li");
-    item.innerHTML = toot.content;  // Security problem?
+    item.innerHTML = DOMPurify.sanitize(toot.content);
     list.appendChild(item);
   }
   element.replaceWith(list);
