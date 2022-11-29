@@ -29,10 +29,14 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
 
   // Construct the HTML content.
   const list = document.createElement("ol");
+  element.replaceWith(list);
   for (const toot of toots) {
     const item = document.createElement("li");
-    item.innerHTML = DOMPurify.sanitize(toot.content);
     list.appendChild(item);
+
+    // Sanitize the post's body HTML to avoid XSS.
+    const body = document.createElement("div");
+    body.innerHTML = DOMPurify.sanitize(toot.content);
+    item.appendChild(body);
   }
-  element.replaceWith(list);
 });
