@@ -25,6 +25,10 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   tootURL.pathname = `/api/v1/accounts/${userId}/statuses`;
   const toots: Toot[] = await (await fetch(tootURL)).json();
 
+  // An iframe as a wrapper.
+  const wrapper = document.createElement("iframe");
+  element.replaceWith(wrapper);
+
   // Construct the HTML content.
   const list = document.createElement("ol");
   for (const toot of toots) {
@@ -32,5 +36,5 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
     item.innerHTML = toot.content;  // Security problem?
     list.appendChild(item);
   }
-  element.replaceWith(list);
+  wrapper.contentDocument.body.appendChild(list);
 });
