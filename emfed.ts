@@ -1,4 +1,5 @@
-import DOMPurify from "https://esm.sh/dompurify";
+import DOMPurify from "https://esm.sh/dompurify@2.4.1";
+import Mustache from "https://esm.sh/mustache@4.2.0";
 
 // Just the fields of toots that we need.
 interface Toot {
@@ -11,6 +12,18 @@ interface Toot {
     avatar: string;
   };
 }
+
+const TOOT_TMPL = `
+<li class="toot">
+  <a class="user" href="{{user_url}}">
+    <img class="avatar" src="{{{avatar}}}">
+    <span class="display-name">{{display_name}}</span>
+    <span class="username">@{{username}}</span>
+  </a>
+  <time datetime="{{timestamp}}">{{date}}</time>
+  <div class="body">{{{body}}}</div>
+</li>
+`;
 
 document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   // Extract username from URL.
@@ -37,37 +50,15 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   list.classList.add("toots");
   element.replaceWith(list);
   for (const toot of toots) {
-    const item = document.createElement("li");
-    item.classList.add("toot");
-    list.appendChild(item);
-
-    // Avatar image.
-    const img = document.createElement("img");
-    img.classList.add("avatar");
-    img.setAttribute("src", toot.account.avatar);
-    item.appendChild(img);
-
-    // Display name.
-    const displayName = document.createElement("span");
-    displayName.classList.add("display-name");
-    displayName.textContent = toot.account.display_name;
-
-    // Username.
-    const userName = document.createElement("span");
-    userName.classList.add("user-name");
-    userName.textContent = '@' + toot.account.username;
-
-    // Format date.
-    const dateStr = new Date(toot.created_at).toLocaleString();
-    const time = document.createElement("time");
-    time.setAttribute("datetime", toot.created_at);
-    time.textContent = dateStr;
-    item.appendChild(time);
-
-    // Sanitize the post's body HTML to avoid XSS.
-    const body = document.createElement("div");
-    body.classList.add("body");
-    body.innerHTML = DOMPurify.sanitize(toot.content);
-    item.appendChild(body);
+    const html = Mustache.render(TOOT_TMPL, {
+      avatar: toot.account.avatar,
+      display_name: toot.account.display_name,
+      username: toot.account.username,
+      timestamp: toot.created_at,
+      date: new Date(toot.created_at).toLocaleString(),
+      body: DOMPurify.sanitize(toot.content),
+      user_url: toot.account.url,
+    });
+    list.insertAdjacentHTML("beforeend", html);
   }
 });
