@@ -20,7 +20,9 @@ const TOOT_TMPL = `
     <span class="display-name">{{display_name}}</span>
     <span class="username">@{{username}}</span>
   </a>
-  <time datetime="{{timestamp}}">{{date}}</time>
+  <a class="permalink" href="{{url}}">
+    <time datetime="{{timestamp}}">{{date}}</time>
+  </a>
   <div class="body">{{{body}}}</div>
 </li>
 `;
@@ -58,6 +60,7 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
       date: new Date(toot.created_at).toLocaleString(),
       body: DOMPurify.sanitize(toot.content),
       user_url: toot.account.url,
+      url: toot.url,
     });
     list.insertAdjacentHTML("beforeend", html);
   }

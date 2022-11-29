@@ -33,7 +33,26 @@
   margin-right: 1em;
 }
 
-.toot time {
+.toot .permalink {
+  text-decoration: none;
   display: block;
   color: #ccc;
+}
+
+.toot .body a {
+  overflow-wrap: anywhere;
+}
+
+/* Weird trick to keep the text in the page but not display it. */
+.toot .body .invisible {
+  display: inline-block;
+  font-size: 0;
+  line-height: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toot .body .ellipsis::after {
+  content: "…";
 }
