@@ -36,11 +36,15 @@ async function loadToots(element: HTMLElement) {
   }
   const username = parts[1];
 
-  // Look up the user profile to get user ID.
-  let lookupURL = new URL(userURL);
-  lookupURL.pathname = "/api/v1/accounts/lookup";
-  lookupURL.search = `?acct=${username}`;
-  const userId: string = (await (await fetch(lookupURL)).json())["id"];
+  // Look up the user profile to get user ID, unless we have it already in the
+  // `data-toot-account-id` attribute.
+  const userId: string = element.dataset["toot-account-id"] ??
+    await (async () => {
+      let lookupURL = new URL(userURL);
+      lookupURL.pathname = "/api/v1/accounts/lookup";
+      lookupURL.search = `?acct=${username}`;
+      return (await (await fetch(lookupURL)).json())["id"];
+    })();
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
   const limit = element.dataset["toot-limit"] ?? "5";
