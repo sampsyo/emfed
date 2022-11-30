@@ -27,7 +27,7 @@ const TOOT_TMPL = `
 </li>
 `;
 
-document.querySelectorAll('a.mastodon-feed').forEach(async element => {
+async function loadToots(element: HTMLElement) {
   // Extract username from URL.
   const userURL = new URL((element as HTMLAnchorElement).href);
   const parts = /@(\w+)$/.exec(userURL.pathname);
@@ -42,9 +42,11 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
   lookupURL.search = `?acct=${username}`;
   const userId: string = (await (await fetch(lookupURL)).json())["id"];
 
-  // Fetch toots.
+  // Fetch toots. Count comes from `data-toot-limit` attribute.
+  const limit = element.dataset["toot-limit"] ?? "5";
   let tootURL = new URL(userURL);
   tootURL.pathname = `/api/v1/accounts/${userId}/statuses`;
+  tootURL.search = `?limit=${limit}`;
   const toots: Toot[] = await (await fetch(tootURL)).json();
 
   // Construct the HTML content.
@@ -64,4 +66,7 @@ document.querySelectorAll('a.mastodon-feed').forEach(async element => {
     });
     list.insertAdjacentHTML("beforeend", html);
   }
-});
+}
+
+// Automatically transform links with a special class.
+document.querySelectorAll('a.mastodon-feed').forEach(loadToots);
