@@ -32,6 +32,18 @@ Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid maliciou
 [eftm]: https://atp.fm/115
 [DOMPurify]: https://github.com/cure53/DOMPurify
 
+Hacking
+-------
+
+An easy way to work with the code is with the [Packup][] bundler for [Deno][].
+Type `make dev` to serve an example page.
+
+Some missing features you might be interested in contributing include rendering media (ideally including their [BlurHash][] placeholder), filtering out replies, and displaying boosts appropriately.
+
+[BlurHash]: https://blurha.sh/
+[deno]: https://deno.land/
+[packup]: https://packup.deno.dev/
+
 Alternatives
 ------------
 
