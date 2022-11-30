@@ -3,7 +3,7 @@
 all: emfed.js
 
 dev:
-	packup example.html
+	packup index.html
 
 %.js: %.ts
 	deno bundle $^ > $@

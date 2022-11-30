@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emfed Example</title>
+    <link rel="stylesheet" type="text/css" href="toots.css">
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+}
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+main {
+  width: 500px;
+  min-width: 480px;
+}
+aside {
+  width: 400px;
+  min-width: 350px;
+}
+.big {
+  font-size: 140%;
+}
+</style>
+  </head>
+  <body>
+    <main>
+      <h1>Emfed</h1>
+      <p class="big">Twitter used to have a really convenient way to embed a
+      feed into your website, but now Twitter is dead.</p>
+      <p>Emfed is a simple, in-browser way to embed
+      <a href="https://joinmastodon.org">Mastodon</a>
+      feeds into webpages.
+      To make a feed like the one on this page, you use simple markup like
+      this:</p>
+<pre>&lt;a class="mastodon-feed"
+   href="https://mastodon.social/@Mastodon"
+   data-toot-limit="4"
+   >follow me into the Fediverse&lt;/a></pre>
+      <p>Then include the JavaScript:</p>
+<pre>&lt;script type="module" src="https://esm.sh/emfed">&lt;/script></pre>
+      <p>For more details, check out the
+      <a href="https://github.com/sampsyo/emfed">README</a>.</p>
+    </main>
+    <aside>
+      <a class="mastodon-feed"
+         href="https://mastodon.social/@Mastodon"
+         data-toot-limit="4"
+         data-toot-account-id="13179"
+         >@Mastodon@mastodon.social</a>
+    </aside>
+    <script type="module" src="emfed.ts"></script>
+  </body>
+</html>
