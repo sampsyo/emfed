@@ -6,10 +6,12 @@ interface Toot {
   created_at: string;
   in_reply_to_id: string | null;
   content: string;
+  url: string;
   account: {
     username: string;
     display_name: string;
     avatar: string;
+    url: string;
   };
 }
 

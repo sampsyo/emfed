@@ -1,5 +1,5 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"]
+    "lib": ["esnext", "dom", "dom.iterable"]
   }
 }
