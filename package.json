@@ -1,0 +1,14 @@
+{
+  "name": "emfed",
+  "version": "0.0.0",
+  "description": "embed a Mastodon feed in a webpage",
+  "main": "dist/emfed.js",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild --outdir=dist emfed.ts",
+    "prepack": "esbuild --outdir=dist emfed.ts"
+  },
+  "dependencies": {
+    "esbuild": "^0.15.16"
+  }
+}
