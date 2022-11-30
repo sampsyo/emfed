@@ -42,17 +42,19 @@ async function loadToots(element: HTMLElement) {
   // `data-toot-account-id` attribute.
   const userId: string = element.dataset["toot-account-id"] ??
     await (async () => {
-      let lookupURL = new URL(userURL);
-      lookupURL.pathname = "/api/v1/accounts/lookup";
-      lookupURL.search = `?acct=${username}`;
+      const lookupURL = Object.assign(new URL(userURL), {
+        pathname: "/api/v1/accounts/lookup",
+        lookupURL: `?acct=${username}`,
+      });
       return (await (await fetch(lookupURL)).json())["id"];
     })();
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
   const limit = element.dataset["toot-limit"] ?? "5";
-  let tootURL = new URL(userURL);
-  tootURL.pathname = `/api/v1/accounts/${userId}/statuses`;
-  tootURL.search = `?limit=${limit}`;
+  const tootURL = Object.assign(new URL(userURL), {
+    pathname: `/api/v1/accounts/${userId}/statuses`,
+    search: `?limit=${limit}`,
+  });
   const toots: Toot[] = await (await fetch(tootURL)).json();
 
   // Construct the HTML content.
