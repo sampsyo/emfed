@@ -6,19 +6,23 @@
 }
 
 .toot {
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   padding: 1rem;
 }
 
 .toot .user {
-  display: block;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-evenly;
+  align-content: flex-start;
+  height: 46px;  /* Avatar height. */
+
   text-decoration: none;
   color: inherit;
-  margin-bottom: 0.25rem;
 }
 
 .toot .avatar {
-  float: left;
+  border-radius: 4px;
   margin-right: 0.5rem;
 }
 
@@ -27,16 +31,30 @@
   display: block;
 }
 
+.toot .user:hover .display-name {
+  text-decoration: underline;
+}
+
 .toot .username {
   display: block;
-  float: left;
   margin-right: 1em;
+  color: #999;
 }
 
 .toot .permalink {
   text-decoration: none;
   display: block;
-  color: #ccc;
+  color: #999;
+  float: right;
+}
+
+.toot .permalink:hover {
+  text-decoration: underline;
+}
+
+.toot .body {
+  clear: both;
+  margin-top: 1em;
 }
 
 .toot .body a {
