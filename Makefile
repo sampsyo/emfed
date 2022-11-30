@@ -6,4 +6,4 @@ dev:
 	packup index.html
 
 %.js: %.ts
-	deno bundle $^ > $@
+	deno bundle --config tsconfig.json $^ > $@

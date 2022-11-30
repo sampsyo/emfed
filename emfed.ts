@@ -29,19 +29,22 @@ const TOOT_TMPL = `
 </li>
 `;
 
-async function loadToots(element: HTMLElement) {
-  // Extract username from URL.
-  const userURL = new URL((element as HTMLAnchorElement).href);
-  const parts = /@(\w+)$/.exec(userURL.pathname);
-  if (!parts) {
-    throw "not a Mastodon user URL";
-  }
-  const username = parts[1];
+async function loadToots(element: Element) {
+  const el = element as HTMLAnchorElement;
+  const userURL = new URL(el.href);
 
-  // Look up the user profile to get user ID, unless we have it already in the
-  // `data-toot-account-id` attribute.
-  const userId: string = element.dataset["toot-account-id"] ??
+  // Get the user ID, either from an explicit `data-toot-account-id` attribute
+  // or by looking it up based on the username in the link.
+  const userId: string = el.dataset["toot-account-id"] ??
     await (async () => {
+      // Extract username from URL.
+      const parts = /@(\w+)$/.exec(userURL.pathname);
+      if (!parts) {
+        throw "not a Mastodon user URL";
+      }
+      const username = parts[1];
+
+      // Look up user ID from username.
       const lookupURL = Object.assign(new URL(userURL), {
         pathname: "/api/v1/accounts/lookup",
         lookupURL: `?acct=${username}`,
@@ -50,7 +53,7 @@ async function loadToots(element: HTMLElement) {
     })();
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
-  const limit = element.dataset["toot-limit"] ?? "5";
+  const limit = el.dataset["toot-limit"] ?? "5";
   const tootURL = Object.assign(new URL(userURL), {
     pathname: `/api/v1/accounts/${userId}/statuses`,
     search: `?limit=${limit}`,
@@ -60,7 +63,7 @@ async function loadToots(element: HTMLElement) {
   // Construct the HTML content.
   const list = document.createElement("ol");
   list.classList.add("toots");
-  element.replaceWith(list);
+  el.replaceWith(list);
   for (const toot of toots) {
     const html = Mustache.render(TOOT_TMPL, {
       avatar: toot.account.avatar,
