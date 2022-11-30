@@ -22,10 +22,10 @@ jobs:
       - uses: actions/setup-node@v3
       - run: npm install --global esbuild
       - uses: actions/configure-pages@v2
-      - run: make
+      - run: make site
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: '.'
+          path: site
   deploy:
     runs-on: ubuntu-latest
     environment:
