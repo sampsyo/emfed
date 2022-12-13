@@ -92,6 +92,15 @@
   content: "…";
 }
 
-.toot img.attachment {
+.toot .attachment {
+  display: block;
   width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+}
+
+.toot .attachment img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

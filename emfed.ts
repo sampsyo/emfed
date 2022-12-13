@@ -42,7 +42,10 @@ const TOOT_TMPL = `
   </a>
   <div class="body">{{{body}}}</div>
   {{#images}}
-  <img class="attachment" src="{{url}}" alt="{{alt}}">
+  <a class="attachment" href="{{orig_url}}"
+   target="_blank" rel="noopener noreferrer">
+    <img class="attachment" src="{{url}}" alt="{{alt}}">
+  </a>
   {{/images}}
 </li>
 `;
@@ -75,6 +78,7 @@ function renderToot(toot: Toot): string {
       .map(att => {
         return {
           url: att.preview_url,
+          orig_url: att.url,
           alt: att.description,
         };
     }),
