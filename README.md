@@ -38,7 +38,7 @@ Hacking
 An easy way to work with the code is with the [Packup][] bundler for [Deno][].
 Type `make dev` to serve an example page.
 
-Some missing features you might be interested in contributing include rendering media (ideally including their [BlurHash][] placeholder) and filtering out replies.
+Some missing features you might be interested in contributing include rendering media beyond static images (GIFs, videos, and audio), using a [BlurHash][] placeholder before media has loaded, and optionally filtering out replies or boosts.
 
 [BlurHash]: https://blurha.sh/
 [deno]: https://deno.land/
@@ -54,6 +54,7 @@ Alternatives
 Changelog
 ---------
 
+* v1.2.0: Display image attachments.
 * v1.1.0: Display boosts (reblogs) correctly.
 * v1.0.1: Fix an incorrect URL when `data-toot-account-id` is not provided.
 * v1.0.0: Initial release.
