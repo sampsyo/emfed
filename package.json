@@ -1,6 +1,6 @@
 {
   "name": "emfed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "embed a Mastodon feed in a webpage",
   "main": "dist/emfed.js",
   "type": "module",
