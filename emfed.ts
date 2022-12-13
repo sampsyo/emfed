@@ -47,7 +47,7 @@ async function loadToots(element: Element) {
       // Look up user ID from username.
       const lookupURL = Object.assign(new URL(userURL), {
         pathname: "/api/v1/accounts/lookup",
-        lookupURL: `?acct=${username}`,
+        search: `?acct=${username}`,
       });
       return (await (await fetch(lookupURL)).json())["id"];
     })();
