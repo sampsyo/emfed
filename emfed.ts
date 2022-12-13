@@ -42,7 +42,7 @@ const TOOT_TMPL = `
   </a>
   <div class="body">{{{body}}}</div>
   {{#images}}
-  <img class="attachment" src="{{preview_url}}" alt="{{description}}">
+  <img class="attachment" src="{{url}}" alt="{{alt}}">
   {{/images}}
 </li>
 `;
@@ -70,7 +70,14 @@ function renderToot(toot: Toot): string {
     user_url: toot.account.url,
     url: toot.url,
     boost,
-    images: toot.media_attachments,
+    images: toot.media_attachments
+      .filter(att => att.type === "image")
+      .map(att => {
+        return {
+          url: att.preview_url,
+          alt: att.description,
+        };
+    }),
   });
 }
 
