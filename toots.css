@@ -46,11 +46,11 @@
 .toot .boost {
   height: 23px;
   margin-bottom: 0.25rem;
+  column-gap: 0.25rem;
 }
 
-.toot .boost:after {
-  content: "boosted ♺";
-  color: #ccc;
+.toot .boost .display-name:after {
+  content: " ♺";
 }
 
 .toot .boost .display-name {
