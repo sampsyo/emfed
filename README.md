@@ -51,6 +51,12 @@ Alternatives
 * [Fedifeed](https://fedifeed.com): Like Mastofeed, but for other ActivityPub software too.
 * [untitled embed script from idotj](https://gitlab.com/idotj/mastodon-embed-feed-timeline): Also client-side. I wanted something with secure HTML embedding, automatic username lookup, and simpler URL-based configuration.
 
+Changelog
+---------
+
+* v1.0.1: Fix an incorrect URL when `data-toot-account-id` is not provided.
+* v1.0.0: Initial release.
+
 Author
 ------
 
