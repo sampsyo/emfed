@@ -49,12 +49,9 @@
   column-gap: 0.25rem;
 }
 
-.toot .boost .display-name:after {
-  content: " ♺";
-}
-
-.toot .boost .display-name {
-  color: #ccc;
+.toot .boost:before {
+  content: "♺";
+  font-size: 140%;
 }
 
 .toot .boost .username {
