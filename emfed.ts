@@ -13,6 +13,7 @@ interface Toot {
     avatar: string;
     url: string;
   };
+  reblog?: Toot;
 }
 
 const TOOT_TMPL = `
@@ -20,6 +21,13 @@ const TOOT_TMPL = `
   <a class="permalink" href="{{url}}">
     <time datetime="{{timestamp}}">{{date}}</time>
   </a>
+  {{#boost}}
+  <a class="user boost" href="{{boost.user_url}}">
+    <img class="avatar" width="23" height="23" src="{{{boost.avatar}}}">
+    <span class="display-name">{{boost.display_name}}</span>
+    <span class="username">@{{boost.username}}</span>
+  </a>
+  {{/boost}}
   <a class="user" href="{{user_url}}">
     <img class="avatar" width="46" height="46" src="{{{avatar}}}">
     <span class="display-name">{{display_name}}</span>
@@ -28,6 +36,32 @@ const TOOT_TMPL = `
   <div class="body">{{{body}}}</div>
 </li>
 `;
+
+function renderToot(toot: Toot): string {
+  // Is this a boost (reblog)?
+  let boost = null;
+  if (toot.reblog) {
+    boost = {
+      avatar: toot.account.avatar,
+      username: toot.account.username,
+      display_name: toot.account.display_name,
+      user_url: toot.account.url,
+    };
+    toot = toot.reblog;  // Show the "inner" toot instead.
+  }
+
+  return Mustache.render(TOOT_TMPL, {
+    avatar: toot.account.avatar,
+    display_name: toot.account.display_name,
+    username: toot.account.username,
+    timestamp: toot.created_at,
+    date: new Date(toot.created_at).toLocaleString(),
+    body: DOMPurify.sanitize(toot.content),
+    user_url: toot.account.url,
+    url: toot.url,
+    boost,
+  });
+}
 
 async function loadToots(element: Element) {
   const el = element as HTMLAnchorElement;
@@ -65,16 +99,7 @@ async function loadToots(element: Element) {
   list.classList.add("toots");
   el.replaceWith(list);
   for (const toot of toots) {
-    const html = Mustache.render(TOOT_TMPL, {
-      avatar: toot.account.avatar,
-      display_name: toot.account.display_name,
-      username: toot.account.username,
-      timestamp: toot.created_at,
-      date: new Date(toot.created_at).toLocaleString(),
-      body: DOMPurify.sanitize(toot.content),
-      user_url: toot.account.url,
-      url: toot.url,
-    });
+    const html = renderToot(toot);
     list.insertAdjacentHTML("beforeend", html);
   }
 }

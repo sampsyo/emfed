@@ -10,12 +10,14 @@
   padding: 1rem;
 }
 
+/* Posting user. */
 .toot .user {
   display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly;
   align-content: flex-start;
   height: 46px;  /* Avatar height. */
+  column-gap: 0.5rem;
 
   text-decoration: none;
   color: inherit;
@@ -23,7 +25,6 @@
 
 .toot .avatar {
   border-radius: 4px;
-  margin-right: 0.5rem;
 }
 
 .toot .display-name {
@@ -39,6 +40,25 @@
   display: block;
   margin-right: 1em;
   color: #999;
+}
+
+/* Boosting user is smaller and above the posting user. */
+.toot .boost {
+  height: 23px;
+  margin-bottom: 0.25rem;
+}
+
+.toot .boost:after {
+  content: "boosted ♺";
+  color: #ccc;
+}
+
+.toot .boost .display-name {
+  color: #ccc;
+}
+
+.toot .boost .username {
+  display: none;
 }
 
 .toot .permalink {
