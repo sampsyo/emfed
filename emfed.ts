@@ -14,6 +14,13 @@ interface Toot {
     url: string;
   };
   reblog?: Toot;
+  media_attachments: {
+    type: "unknown" | "image" | "gifv" | "video" | "audio";
+    url: string;
+    preview_url: string;
+    description: string;
+    blurhash: string;
+  }[];
 }
 
 const TOOT_TMPL = `
@@ -34,6 +41,9 @@ const TOOT_TMPL = `
     <span class="username">@{{username}}</span>
   </a>
   <div class="body">{{{body}}}</div>
+  {{#images}}
+  <img class="attachment" src="{{preview_url}}" alt="{{description}}">
+  {{/images}}
 </li>
 `;
 
@@ -60,6 +70,7 @@ function renderToot(toot: Toot): string {
     user_url: toot.account.url,
     url: toot.url,
     boost,
+    images: toot.media_attachments,
   });
 }
 

@@ -91,3 +91,7 @@
 .toot .body .ellipsis::after {
   content: "…";
 }
+
+.toot img.attachment {
+  width: 100%;
+}
