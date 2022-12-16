@@ -1,7 +1,8 @@
 import DOMPurify from "https://esm.sh/dompurify@2.4.1";
-import Mustache from "https://esm.sh/mustache@4.2.0";
 
-// Just the fields of toots that we need.
+/**
+ * A Mastodon toot object, with just the fields of toots that we need.
+ */
 interface Toot {
   created_at: string;
   in_reply_to_id: string | null;
@@ -23,33 +24,57 @@ interface Toot {
   }[];
 }
 
-const TOOT_TMPL = `
-<li class="toot">
-  <a class="permalink" href="{{url}}">
-    <time datetime="{{timestamp}}">{{date}}</time>
-  </a>
-  {{#boost}}
-  <a class="user boost" href="{{boost.user_url}}">
-    <img class="avatar" width="23" height="23" src="{{{boost.avatar}}}">
-    <span class="display-name">{{boost.display_name}}</span>
-    <span class="username">@{{boost.username}}</span>
-  </a>
-  {{/boost}}
-  <a class="user" href="{{user_url}}">
-    <img class="avatar" width="46" height="46" src="{{{avatar}}}">
-    <span class="display-name">{{display_name}}</span>
-    <span class="username">@{{username}}</span>
-  </a>
-  <div class="body">{{{body}}}</div>
-  {{#images}}
-  <a class="attachment" href="{{orig_url}}"
-   target="_blank" rel="noopener noreferrer">
-    <img class="attachment" src="{{url}}" alt="{{alt}}">
-  </a>
-  {{/images}}
-</li>
-`;
+/**
+ * Escape a string for inclusion in HTML.
+ */
+function esc(s: string): string {
+    return s.replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+}
 
+/**
+ * A wrapped string that indicates that it's safe to include in HTML without
+ * escaping.
+ */
+class SafeString {
+  str: string;
+
+  constructor(s: string) {
+    this.str = s;
+  }
+
+  toString(): string {
+    return this.str;
+  }
+}
+
+/**
+ * Mark a string as safe for inclusion in HTML.
+ */
+function safe(s: string): SafeString {
+  return new SafeString(s);
+}
+
+/**
+ * The world's dumbest templating system.
+ */
+function html(strings: TemplateStringsArray,
+              ...subs: (string | SafeString)[]): SafeString {
+  let out = strings[0];
+  for (let i = 1; i < strings.length; ++i) {
+    const sub = subs[i - 1];
+    out += (sub instanceof SafeString) ? sub.str : esc(sub);
+    out += strings[i];
+  }
+  return safe(out);
+}
+
+/**
+ * Render a single toot object as an HTML string.
+ */
 function renderToot(toot: Toot): string {
   // Is this a boost (reblog)?
   let boost = null;
@@ -63,28 +88,39 @@ function renderToot(toot: Toot): string {
     toot = toot.reblog;  // Show the "inner" toot instead.
   }
 
-  return Mustache.render(TOOT_TMPL, {
-    avatar: toot.account.avatar,
-    display_name: toot.account.display_name,
-    username: toot.account.username,
-    timestamp: toot.created_at,
-    date: new Date(toot.created_at).toLocaleString(),
-    body: DOMPurify.sanitize(toot.content),
-    user_url: toot.account.url,
-    url: toot.url,
-    boost,
-    images: toot.media_attachments
-      .filter(att => att.type === "image")
-      .map(att => {
-        return {
-          url: att.preview_url,
-          orig_url: att.url,
-          alt: att.description,
-        };
-    }),
-  });
+  const date = new Date(toot.created_at).toLocaleString();
+  const images = toot.media_attachments.filter(att => att.type === "image");
+
+  return html`
+<li class="toot">
+  <a class="permalink" href="${toot.url}">
+    <time datetime="${toot.created_at}">${date}</time>
+  </a>
+  ${boost ? html`
+  <a class="user boost" href="${boost.user_url}">
+    <img class="avatar" width="23" height="23" src="${boost.avatar}">
+    <span class="display-name">${boost.display_name}</span>
+    <span class="username">@${boost.username}</span>
+  </a>` : ""}
+  <a class="user" href="${toot.account.url}">
+    <img class="avatar" width="46" height="46" src="${toot.account.avatar}">
+    <span class="display-name">${toot.account.display_name}</span>
+    <span class="username">@${toot.account.username}</span>
+  </a>
+  <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
+  ${safe(images.map(att => html`
+  <a class="attachment" href="${att.url}"
+   target="_blank" rel="noopener noreferrer">
+    <img class="attachment" src="${att.preview_url}"
+      alt="${att.description}">
+  </a>`).join(""))}
+</li>`.toString();
 }
 
+/**
+ * Get the toots for an HTML element and replace that element with the
+ * rendered toot list.
+ */
 async function loadToots(element: Element) {
   const el = element as HTMLAnchorElement;
   const userURL = new URL(el.href);
