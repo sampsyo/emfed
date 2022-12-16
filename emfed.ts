@@ -36,6 +36,44 @@ function esc(s: string): string {
 }
 
 /**
+ * A wrapped string that indicates that it's safe to include in HTML without
+ * escaping.
+ */
+class SafeString {
+  __safe = true;
+  str: string;
+
+  constructor(s: string) {
+    this.str = s;
+  }
+
+  toString(): string {
+    return this.str;
+  }
+}
+
+/**
+ * Mark a string as safe for inclusion in HTML.
+ */
+function safe(s: string): SafeString {
+  return new SafeString(s);
+}
+
+/**
+ * The world's dumbest templating system.
+ */
+function html(strings: TemplateStringsArray,
+              ...subs: (string | SafeString)[]): SafeString {
+  let out = strings[0];
+  for (let i = 1; i < strings.length; ++i) {
+    const sub = subs[i - 1];
+    out += sub.__safe ? sub.str : esc(sub);
+    out += strings[i];
+  }
+  return safe(out);
+}
+
+/**
  * Render a single toot object as an HTML string.
  */
 function renderToot(toot: Toot): string {
@@ -54,30 +92,29 @@ function renderToot(toot: Toot): string {
   const date = new Date(toot.created_at).toLocaleString();
   const images = toot.media_attachments.filter(att => att.type === "image");
 
-  return `
+  return html`
 <li class="toot">
-  <a class="permalink" href="${esc(toot.url)}">
-    <time datetime="${esc(toot.created_at)}">${esc(date)}</time>
+  <a class="permalink" href="${toot.url}">
+    <time datetime="${toot.created_at}">${date}</time>
   </a>
-  ${boost ? `
-  <a class="user boost" href="${esc(boost.user_url)}">
-    <img class="avatar" width="23" height="23" src="${esc(boost.avatar)}">
-    <span class="display-name">${esc(boost.display_name)}</span>
-    <span class="username">@${esc(boost.username)}</span>
+  ${boost ? html`
+  <a class="user boost" href="${boost.user_url}">
+    <img class="avatar" width="23" height="23" src="${boost.avatar}">
+    <span class="display-name">${boost.display_name}</span>
+    <span class="username">@${boost.username}</span>
   </a>` : ""}
-  <a class="user" href="${esc(toot.account.url)}">
-    <img class="avatar" width="46" height="46"
-      src="${esc(toot.account.avatar)}">
-    <span class="display-name">${esc(toot.account.display_name)}</span>
-    <span class="username">@${esc(toot.account.username)}</span>
+  <a class="user" href="${toot.account.url}">
+    <img class="avatar" width="46" height="46" src="${toot.account.avatar}">
+    <span class="display-name">${toot.account.display_name}</span>
+    <span class="username">@${toot.account.username}</span>
   </a>
-  <div class="body">${DOMPurify.sanitize(toot.content)}</div>
-  ${images.map(att => `
-  <a class="attachment" href="${esc(att.url)}"
+  <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
+  ${safe(images.map(att => html`
+  <a class="attachment" href="${att.url}"
    target="_blank" rel="noopener noreferrer">
-    <img class="attachment" src="${esc(att.preview_url)}"
-      alt="${esc(att.description)}">
-  </a>`)}
+    <img class="attachment" src="${att.preview_url}"
+      alt="${att.description}">
+  </a>`).join(""))}
 </li>`;
 }
 
