@@ -40,7 +40,6 @@ function esc(s: string): string {
  * escaping.
  */
 class SafeString {
-  __safe = true;
   str: string;
 
   constructor(s: string) {
@@ -67,7 +66,7 @@ function html(strings: TemplateStringsArray,
   let out = strings[0];
   for (let i = 1; i < strings.length; ++i) {
     const sub = subs[i - 1];
-    out += sub.__safe ? sub.str : esc(sub);
+    out += (sub instanceof SafeString) ? sub.str : esc(sub);
     out += strings[i];
   }
   return safe(out);
@@ -115,7 +114,7 @@ function renderToot(toot: Toot): string {
     <img class="attachment" src="${att.preview_url}"
       alt="${att.description}">
   </a>`).join(""))}
-</li>`;
+</li>`.toString();
 }
 
 /**
