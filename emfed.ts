@@ -1,6 +1,8 @@
 import DOMPurify from "https://esm.sh/dompurify@2.4.1";
 
-// Just the fields of toots that we need.
+/**
+ * A Mastodon toot object, with just the fields of toots that we need.
+ */
 interface Toot {
   created_at: string;
   in_reply_to_id: string | null;
@@ -22,6 +24,9 @@ interface Toot {
   }[];
 }
 
+/**
+ * Escape a string for inclusion in HTML.
+ */
 function esc(s: string): string {
     return s.replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
@@ -30,6 +35,9 @@ function esc(s: string): string {
       .replaceAll("'", '&#039;');
 }
 
+/**
+ * Render a single toot object as an HTML string.
+ */
 function renderToot(toot: Toot): string {
   // Is this a boost (reblog)?
   let boost = null;
@@ -73,6 +81,10 @@ function renderToot(toot: Toot): string {
 </li>`;
 }
 
+/**
+ * Get the toots for an HTML element and replace that element with the
+ * rendered toot list.
+ */
 async function loadToots(element: Element) {
   const el = element as HTMLAnchorElement;
   const userURL = new URL(el.href);
