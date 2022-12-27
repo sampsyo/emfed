@@ -25,37 +25,49 @@ interface Toot {
 }
 
 /**
- * Escape a string for inclusion in HTML.
- */
-function esc(s: string): string {
-    return s.replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-}
-
-/**
  * A wrapped string that indicates that it's safe to include in HTML without
  * escaping.
  */
-type SafeString = string & {__safe: null};
+interface SafeString extends String {
+  __safe: null;
+}
 
 /**
  * Mark a string as safe for inclusion in HTML.
  */
 function safe(s: string): SafeString {
-  return Object.assign(s, {__safe: null});
+  return Object.assign(new String(s), {__safe: null});
+}
+
+type TmpVal = string | SafeString | TmpVal[];
+
+/**
+ * Format a value as a string for templating.
+ */
+function flat(v: TmpVal): string | SafeString {
+  if (typeof(v) === "string" || v instanceof String) {
+    if (v.hasOwnProperty("__safe")) {
+      return v;
+    } else {
+      // Escape strings for inclusion in HTML.
+      return v.replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  } else {
+    return v.map(flat).join("");
+  }
 }
 
 /**
  * The world's dumbest templating system.
  */
-function html(strings: TemplateStringsArray, ...subs: string[]): SafeString {
+function html(strings: TemplateStringsArray, ...subs: TmpVal[]): SafeString {
   let out = strings[0];
   for (let i = 1; i < strings.length; ++i) {
-    const sub = subs[i - 1];
-    out += sub.hasOwnProperty("__safe") ? sub : esc(sub);
+    out += flat(subs[i - 1]);
     out += strings[i];
   }
   return safe(out);
@@ -103,7 +115,7 @@ function renderToot(toot: Toot): string {
     <img class="attachment" src="${att.preview_url}"
       alt="${att.description}">
   </a>`).join(""))}
-</li>`;
+</li>`.toString();
 }
 
 /**
