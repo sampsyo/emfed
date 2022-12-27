@@ -39,13 +39,15 @@ function safe(s: string): SafeString {
   return Object.assign(new String(s), {__safe: null});
 }
 
-type TmpVal = string | SafeString | TmpVal[];
+type TmpVal = string | SafeString | TmpVal[] | undefined | null;
 
 /**
  * Format a value as a string for templating.
  */
 function flat(v: TmpVal): string | SafeString {
-  if (typeof(v) === "string" || v instanceof String) {
+  if (typeof(v) === "undefined" || v === null) {
+    return "";
+  } else if (typeof(v) === "string" || v instanceof String) {
     if (v.hasOwnProperty("__safe")) {
       return v;
     } else {
@@ -97,12 +99,12 @@ function renderToot(toot: Toot): string {
   <a class="permalink" href="${toot.url}">
     <time datetime="${toot.created_at}">${date}</time>
   </a>
-  ${boost ? html`
+  ${boost && html`
   <a class="user boost" href="${boost.user_url}">
     <img class="avatar" width="23" height="23" src="${boost.avatar}">
     <span class="display-name">${boost.display_name}</span>
     <span class="username">@${boost.username}</span>
-  </a>` : ""}
+  </a>`}
   <a class="user" href="${toot.account.url}">
     <img class="avatar" width="46" height="46" src="${toot.account.avatar}">
     <span class="display-name">${toot.account.display_name}</span>
