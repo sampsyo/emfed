@@ -39,34 +39,23 @@ function esc(s: string): string {
  * A wrapped string that indicates that it's safe to include in HTML without
  * escaping.
  */
-class SafeString {
-  str: string;
-
-  constructor(s: string) {
-    this.str = s;
-  }
-
-  toString(): string {
-    return this.str;
-  }
-}
+type SafeString = string & {__safe: null};
 
 /**
  * Mark a string as safe for inclusion in HTML.
  */
 function safe(s: string): SafeString {
-  return new SafeString(s);
+  return Object.assign(s, {__safe: null});
 }
 
 /**
  * The world's dumbest templating system.
  */
-function html(strings: TemplateStringsArray,
-              ...subs: (string | SafeString)[]): SafeString {
+function html(strings: TemplateStringsArray, ...subs: string[]): SafeString {
   let out = strings[0];
   for (let i = 1; i < strings.length; ++i) {
     const sub = subs[i - 1];
-    out += (sub instanceof SafeString) ? sub.str : esc(sub);
+    out += sub.hasOwnProperty("__safe") ? sub : esc(sub);
     out += strings[i];
   }
   return safe(out);
@@ -114,7 +103,7 @@ function renderToot(toot: Toot): string {
     <img class="attachment" src="${att.preview_url}"
       alt="${att.description}">
   </a>`).join(""))}
-</li>`.toString();
+</li>`;
 }
 
 /**
