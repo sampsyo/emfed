@@ -39,6 +39,13 @@ function safe(s: string): SafeString {
   return Object.assign(new String(s), {__safe: null});
 }
 
+/**
+ * Values that can be used in our template system.
+ *
+ * Arrays are automatically joined. Null & undefined appear as empty strings,
+ * so you can do `value && str` to conditionally include `str` in a template
+ * (and otherwise include nothing).
+ */
 type TmpVal = string | SafeString | TmpVal[] | undefined | null;
 
 /**
