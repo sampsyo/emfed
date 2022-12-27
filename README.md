@@ -54,10 +54,13 @@ Alternatives
 Changelog
 ---------
 
+* v1.3.0: Drop the dependency on [Mustache][].
 * v1.2.0: Display image attachments.
 * v1.1.0: Display boosts (reblogs) correctly.
 * v1.0.1: Fix an incorrect URL when `data-toot-account-id` is not provided.
 * v1.0.0: Initial release.
+
+[mustache]: https://github.com/janl/mustache.js/
 
 Author
 ------
