@@ -109,12 +109,12 @@ function renderToot(toot: Toot): string {
     <span class="username">@${toot.account.username}</span>
   </a>
   <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
-  ${safe(images.map(att => html`
+  ${images.map(att => html`
   <a class="attachment" href="${att.url}"
    target="_blank" rel="noopener noreferrer">
     <img class="attachment" src="${att.preview_url}"
       alt="${att.description}">
-  </a>`).join(""))}
+  </a>`)}
 </li>`.toString();
 }
 
