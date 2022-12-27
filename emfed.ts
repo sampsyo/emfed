@@ -137,7 +137,7 @@ async function loadToots(element: Element) {
 
   // Get the user ID, either from an explicit `data-toot-account-id` attribute
   // or by looking it up based on the username in the link.
-  const userId: string = el.dataset["toot-account-id"] ??
+  const userId: string = el.dataset.tootAccountId ??
     await (async () => {
       // Extract username from URL.
       const parts = /@(\w+)$/.exec(userURL.pathname);
@@ -155,7 +155,7 @@ async function loadToots(element: Element) {
     })();
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
-  const limit = el.dataset["toot-limit"] ?? "5";
+  const limit = el.dataset.tootLimit ?? "5";
   const tootURL = Object.assign(new URL(userURL), {
     pathname: `/api/v1/accounts/${userId}/statuses`,
     search: `?limit=${limit}`,
