@@ -25,48 +25,58 @@ interface Toot {
 }
 
 /**
- * Escape a string for inclusion in HTML.
- */
-function esc(s: string): string {
-    return s.replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-}
-
-/**
  * A wrapped string that indicates that it's safe to include in HTML without
  * escaping.
  */
-class SafeString {
-  str: string;
-
-  constructor(s: string) {
-    this.str = s;
-  }
-
-  toString(): string {
-    return this.str;
-  }
+interface SafeString extends String {
+  __safe: null;
 }
 
 /**
  * Mark a string as safe for inclusion in HTML.
  */
 function safe(s: string): SafeString {
-  return new SafeString(s);
+  return Object.assign(new String(s), {__safe: null});
+}
+
+/**
+ * Values that can be used in our template system.
+ *
+ * Arrays are automatically joined. Null & undefined appear as empty strings,
+ * so you can do `value && str` to conditionally include `str` in a template
+ * (and otherwise include nothing).
+ */
+type TmpVal = string | SafeString | TmpVal[] | undefined | null;
+
+/**
+ * Format a value as a string for templating.
+ */
+function flat(v: TmpVal): string | SafeString {
+  if (typeof(v) === "undefined" || v === null) {
+    return "";
+  } else if (typeof(v) === "string" || v instanceof String) {
+    if (v.hasOwnProperty("__safe")) {
+      return v;
+    } else {
+      // Escape strings for inclusion in HTML.
+      return v.replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  } else {
+    return v.map(flat).join("");
+  }
 }
 
 /**
  * The world's dumbest templating system.
  */
-function html(strings: TemplateStringsArray,
-              ...subs: (string | SafeString)[]): SafeString {
+function html(strings: TemplateStringsArray, ...subs: TmpVal[]): SafeString {
   let out = strings[0];
   for (let i = 1; i < strings.length; ++i) {
-    const sub = subs[i - 1];
-    out += (sub instanceof SafeString) ? sub.str : esc(sub);
+    out += flat(subs[i - 1]);
     out += strings[i];
   }
   return safe(out);
@@ -96,24 +106,24 @@ function renderToot(toot: Toot): string {
   <a class="permalink" href="${toot.url}">
     <time datetime="${toot.created_at}">${date}</time>
   </a>
-  ${boost ? html`
+  ${boost && html`
   <a class="user boost" href="${boost.user_url}">
     <img class="avatar" width="23" height="23" src="${boost.avatar}">
     <span class="display-name">${boost.display_name}</span>
     <span class="username">@${boost.username}</span>
-  </a>` : ""}
+  </a>`}
   <a class="user" href="${toot.account.url}">
     <img class="avatar" width="46" height="46" src="${toot.account.avatar}">
     <span class="display-name">${toot.account.display_name}</span>
     <span class="username">@${toot.account.username}</span>
   </a>
   <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
-  ${safe(images.map(att => html`
+  ${images.map(att => html`
   <a class="attachment" href="${att.url}"
    target="_blank" rel="noopener noreferrer">
     <img class="attachment" src="${att.preview_url}"
       alt="${att.description}">
-  </a>`).join(""))}
+  </a>`)}
 </li>`.toString();
 }
 
