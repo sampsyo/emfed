@@ -156,9 +156,11 @@ async function loadToots(element: Element) {
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
   const limit = el.dataset.tootLimit ?? "5";
+  // Whether replies are filtered comes from `data-exclude-replies` attribute.
+  const excludeReplies = el.dataset.excludeReplies ?? "false";
   const tootURL = Object.assign(new URL(userURL), {
     pathname: `/api/v1/accounts/${userId}/statuses`,
-    search: `?limit=${limit}`,
+    search: `?limit=${limit}&exclude_replies=${excludeReplies}`,
   });
   const toots: Toot[] = await (await fetch(tootURL)).json();
 
