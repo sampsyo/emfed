@@ -25,6 +25,7 @@ You can customize the feed with `data-` attributes:
 
 * `data-toot-limit`: The maximum number of toots to display.
 * `data-toot-account-id`: Emfed needs to make an extra API request to translate your human-readable username (like `@Mastodon`) into an internal ID (like 13179) before it can look up your toots. If you have [empathy for the machine][eftm], you can make everything faster by specifying the ID directly here.
+* `data-exclude-replies`: "true" or "false" according to whether or not you'd like to exclude replies. The default behavior is that replies are included.
 
 Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid malicious markup and XSS attacks.
 
