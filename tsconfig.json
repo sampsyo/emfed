@@ -1,5 +1,19 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "dom", "dom.iterable"]
-  }
+    "outDir": "lib",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
 }

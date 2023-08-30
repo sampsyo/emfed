@@ -5,10 +5,15 @@
   "main": "dist/emfed.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild --outdir=dist emfed.ts",
-    "prepack": "esbuild --outdir=dist emfed.ts"
+    "build": "tsc && esbuild --bundle --outdir=dist lib/emfed.js",
+    "prepack": "tsc && esbuild --bundle --outdir=dist lib/emfed.js"
   },
   "dependencies": {
-    "esbuild": "^0.15.16"
+    "dompurify": "^2.4.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.16",
+    "typescript": "^5.2.2",
+    "@types/dompurify": "^3.0.2"
   }
 }
