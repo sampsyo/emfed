@@ -45,6 +45,18 @@ Some missing features you might be interested in contributing include rendering 
 [deno]: https://deno.land/
 [packup]: https://packup.deno.dev/
 
+API
+---
+
+For a web application that does custom rendering, an API is also provided to allow control of when the
+document is rendered:
+
+```ts
+import { loadToots } from "emfed/lib/api";
+
+document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
+```
+
 Alternatives
 ------------
 
