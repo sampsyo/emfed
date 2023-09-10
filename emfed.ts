@@ -184,5 +184,22 @@ async function loadToots(element: Element) {
   }
 }
 
-// Automatically transform links with a special class.
-document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
+/**
+ * Automatically transform links with a special class.
+ */
+export function loadAll() {
+  document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
+}
+
+// By default, we automatically transform all links. But users can disable
+// this by supplying ?auto=off and instead manually invoking the API to
+// transform specific elements.
+if (
+  !(
+    import.meta &&
+    import.meta.url &&
+    new URL(import.meta.url).searchParams.get("auto") === "off"
+  )
+) {
+  loadAll();
+}
