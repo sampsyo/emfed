@@ -12,7 +12,7 @@
     "build": "esbuild --outdir=dist emfed.ts",
     "prepack": "esbuild --outdir=dist emfed.ts"
   },
-  "dependencies": {
-    "esbuild": "^0.15.16"
+  "devDependencies": {
+    "esbuild": "^0.19.2"
   }
 }
