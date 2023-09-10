@@ -33,6 +33,18 @@ Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid maliciou
 [eftm]: https://atp.fm/115
 [DOMPurify]: https://github.com/cure53/DOMPurify
 
+Using via the API
+-----------------
+
+By default, Emfed automatically transforms all the special Mastodon links it finds on the page.
+You can also instead invoke it programmatically, in which case you will want to instruct it not to automatically transform anything:
+
+    import { loadToots } from "emfed?auto=off";
+    document.querySelectorAll(".my-feed-class").forEach(loadToots);
+
+Use the `?auto=off` URL parameter to disable the automatic behavior.
+Then, call the `loadToots` function on any element to replace it with a Mastodon feed as described above.
+
 Hacking
 -------
 
