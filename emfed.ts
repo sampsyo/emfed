@@ -140,7 +140,7 @@ function renderToot(toot: Toot): string {
  * Get the toots for an HTML element and replace that element with the
  * rendered toot list.
  */
-async function loadToots(element: Element) {
+export async function loadToots(element: Element) {
   const el = element as HTMLAnchorElement;
   const userURL = new URL(el.href);
 
