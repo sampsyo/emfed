@@ -1,4 +1,4 @@
-import DOMPurify from "https://esm.sh/dompurify@2.4.1";
+import DOMPurify from "https://esm.sh/dompurify@3";
 
 /**
  * A Mastodon toot object, with just the fields of toots that we need.
