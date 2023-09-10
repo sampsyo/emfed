@@ -36,7 +36,7 @@ interface SafeString extends String {
  * Mark a string as safe for inclusion in HTML.
  */
 function safe(s: string): SafeString {
-  return Object.assign(new String(s), {__safe: null});
+  return Object.assign(new String(s), { __safe: null });
 }
 
 /**
@@ -52,18 +52,19 @@ type TmpVal = string | SafeString | TmpVal[] | undefined | null;
  * Format a value as a string for templating.
  */
 function flat(v: TmpVal): string | SafeString {
-  if (typeof(v) === "undefined" || v === null) {
+  if (typeof v === "undefined" || v === null) {
     return "";
-  } else if (typeof(v) === "string" || v instanceof String) {
+  } else if (typeof v === "string" || v instanceof String) {
     if (v.hasOwnProperty("__safe")) {
       return v;
     } else {
       // Escape strings for inclusion in HTML.
-      return v.replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+      return v
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
   } else {
     return v.map(flat).join("");
@@ -95,36 +96,44 @@ function renderToot(toot: Toot): string {
       display_name: toot.account.display_name,
       user_url: toot.account.url,
     };
-    toot = toot.reblog;  // Show the "inner" toot instead.
+    toot = toot.reblog; // Show the "inner" toot instead.
   }
 
   const date = new Date(toot.created_at).toLocaleString();
-  const images = toot.media_attachments.filter(att => att.type === "image");
+  const images = toot.media_attachments.filter((att) => att.type === "image");
 
-  return html`
-<li class="toot">
-  <a class="permalink" href="${toot.url}">
-    <time datetime="${toot.created_at}">${date}</time>
-  </a>
-  ${boost && html`
-  <a class="user boost" href="${boost.user_url}">
-    <img class="avatar" width="23" height="23" src="${boost.avatar}">
-    <span class="display-name">${boost.display_name}</span>
-    <span class="username">@${boost.username}</span>
-  </a>`}
-  <a class="user" href="${toot.account.url}">
-    <img class="avatar" width="46" height="46" src="${toot.account.avatar}">
-    <span class="display-name">${toot.account.display_name}</span>
-    <span class="username">@${toot.account.username}</span>
-  </a>
-  <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
-  ${images.map(att => html`
-  <a class="attachment" href="${att.url}"
-   target="_blank" rel="noopener noreferrer">
-    <img class="attachment" src="${att.preview_url}"
-      alt="${att.description}">
-  </a>`)}
-</li>`.toString();
+  return html` <li class="toot">
+    <a class="permalink" href="${toot.url}">
+      <time datetime="${toot.created_at}">${date}</time>
+    </a>
+    ${boost &&
+    html` <a class="user boost" href="${boost.user_url}">
+      <img class="avatar" width="23" height="23" src="${boost.avatar}" />
+      <span class="display-name">${boost.display_name}</span>
+      <span class="username">@${boost.username}</span>
+    </a>`}
+    <a class="user" href="${toot.account.url}">
+      <img class="avatar" width="46" height="46" src="${toot.account.avatar}" />
+      <span class="display-name">${toot.account.display_name}</span>
+      <span class="username">@${toot.account.username}</span>
+    </a>
+    <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
+    ${images.map(
+      (att) =>
+        html` <a
+          class="attachment"
+          href="${att.url}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            class="attachment"
+            src="${att.preview_url}"
+            alt="${att.description}"
+          />
+        </a>`,
+    )}
+  </li>`.toString();
 }
 
 /**
@@ -137,8 +146,9 @@ async function loadToots(element: Element) {
 
   // Get the user ID, either from an explicit `data-toot-account-id` attribute
   // or by looking it up based on the username in the link.
-  const userId: string = el.dataset.tootAccountId ??
-    await (async () => {
+  const userId: string =
+    el.dataset.tootAccountId ??
+    (await (async () => {
       // Extract username from URL.
       const parts = /@(\w+)$/.exec(userURL.pathname);
       if (!parts) {
@@ -152,7 +162,7 @@ async function loadToots(element: Element) {
         search: `?acct=${username}`,
       });
       return (await (await fetch(lookupURL)).json())["id"];
-    })();
+    })());
 
   // Fetch toots. Count comes from `data-toot-limit` attribute.
   const limit = el.dataset.tootLimit ?? "5";
@@ -175,4 +185,4 @@ async function loadToots(element: Element) {
 }
 
 // Automatically transform links with a special class.
-document.querySelectorAll('a.mastodon-feed').forEach(loadToots);
+document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
