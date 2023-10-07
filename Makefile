@@ -10,10 +10,9 @@ dev:
 check:
 	deno check --config tsconfig.json src/emfed.ts
 
-# A bundled version we create for publishing to npm.
-dist/emfed.js: $(SRC)
-	npm install
-	npm run build
+# A bundled & minified version, if you want that.
+dist/emfed.bundle.js: $(SRC)
+	esbuild --bundle --minify --outfile=dist/emfed.bundle.js src/emfed.ts
 
 # The public site, for publishing to GitHub Pages.
 site: index.html $(SRC) toots.css
