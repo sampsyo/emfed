@@ -9,8 +9,8 @@
   "main": "dist/emfed.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild --outdir=dist emfed.ts",
-    "prepack": "esbuild --outdir=dist emfed.ts"
+    "build": "esbuild --bundle --outdir=dist src/emfed.ts",
+    "prepack": "esbuild --bundle --outdir=dist src/emfed.ts"
   },
   "devDependencies": {
     "esbuild": "^0.19.2"

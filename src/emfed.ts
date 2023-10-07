@@ -1,28 +1,5 @@
+import { Toot, getToots } from "./client.ts";
 import DOMPurify from "https://esm.sh/dompurify@3";
-
-/**
- * A Mastodon toot object, with just the fields of toots that we need.
- */
-interface Toot {
-  created_at: string;
-  in_reply_to_id: string | null;
-  content: string;
-  url: string;
-  account: {
-    username: string;
-    display_name: string;
-    avatar: string;
-    url: string;
-  };
-  reblog?: Toot;
-  media_attachments: {
-    type: "unknown" | "image" | "gifv" | "video" | "audio";
-    url: string;
-    preview_url: string;
-    description: string;
-    blurhash: string;
-  }[];
-}
 
 /**
  * A wrapped string that indicates that it's safe to include in HTML without
@@ -102,7 +79,7 @@ function renderToot(toot: Toot): string {
   const date = new Date(toot.created_at).toLocaleString();
   const images = toot.media_attachments.filter((att) => att.type === "image");
 
-  return html` <li class="toot">
+  return html`<li class="toot">
     <a class="permalink" href="${toot.url}">
       <time datetime="${toot.created_at}">${date}</time>
     </a>
@@ -141,38 +118,14 @@ function renderToot(toot: Toot): string {
  * rendered toot list.
  */
 async function loadToots(element: Element) {
+  // Fetch toots based on the element's `data-toot-*` attributes.
   const el = element as HTMLAnchorElement;
-  const userURL = new URL(el.href);
-
-  // Get the user ID, either from an explicit `data-toot-account-id` attribute
-  // or by looking it up based on the username in the link.
-  const userId: string =
-    el.dataset.tootAccountId ??
-    (await (async () => {
-      // Extract username from URL.
-      const parts = /@(\w+)$/.exec(userURL.pathname);
-      if (!parts) {
-        throw "not a Mastodon user URL";
-      }
-      const username = parts[1];
-
-      // Look up user ID from username.
-      const lookupURL = Object.assign(new URL(userURL), {
-        pathname: "/api/v1/accounts/lookup",
-        search: `?acct=${username}`,
-      });
-      return (await (await fetch(lookupURL)).json())["id"];
-    })());
-
-  // Fetch toots. Count comes from `data-toot-limit` attribute.
-  const limit = el.dataset.tootLimit ?? "5";
-  // Whether replies are filtered comes from `data-exclude-replies` attribute.
-  const excludeReplies = el.dataset.excludeReplies ?? "false";
-  const tootURL = Object.assign(new URL(userURL), {
-    pathname: `/api/v1/accounts/${userId}/statuses`,
-    search: `?limit=${limit}&exclude_replies=${excludeReplies}`,
-  });
-  const toots: Toot[] = await (await fetch(tootURL)).json();
+  const toots = await getToots(
+    el.href,
+    el.dataset.tootAccountId,
+    el.dataset.tootLimit,
+    el.dataset.excludeReplies === "true",
+  );
 
   // Construct the HTML content.
   const list = document.createElement("ol");
