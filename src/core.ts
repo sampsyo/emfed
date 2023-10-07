@@ -123,7 +123,7 @@ export async function loadToots(element: Element) {
   const toots = await getToots(
     el.href,
     el.dataset.tootAccountId,
-    el.dataset.tootLimit,
+    Number(el.dataset.tootLimit ?? 5),
     el.dataset.excludeReplies === "true",
   );
 
