@@ -1,4 +1,4 @@
-SRC := src/emfed.ts src/client.ts
+SRC := src/emfed.ts src/client.ts src/core.ts
 
 .PHONY: all dev site check
 
