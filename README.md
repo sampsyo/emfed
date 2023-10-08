@@ -55,6 +55,7 @@ Alternatives
 Changelog
 ---------
 
+* v1.4.0: Split into multiple submodules, which also lets you avoid automatic transformation.
 * v1.3.0: Drop the dependency on [Mustache][]. Fix a bug where, on some browsers, the `data-*` attributes would not work (so we'd always use the default configuration).
 * v1.2.0: Display image attachments.
 * v1.1.0: Display boosts (reblogs) correctly.
