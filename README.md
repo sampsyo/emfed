@@ -13,7 +13,7 @@ To use it, put a special link like this where you want the feed to appear:
 
 Then include the JavaScript (probably at the end of your `<body>`):
 
-    <script type="module" src="https://esm.sh/emfed"></script>
+    <script type="module" src="https://esm.sh/emfed@1"></script>
 
 Emfed generates some pretty basic markup for the feed.
 You probably want to style it to look like a proper social media feed, which you can do with plain ol' CSS scoped to the `.toots` selector, or you can use its provided CSS (in your `<head>`):
