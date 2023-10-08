@@ -3,7 +3,7 @@
     "strict": true,
     "lib": ["esnext", "dom", "dom.iterable"],
     "target": "esnext",
-    "module": "esnext",
+    "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "dist"
   }
