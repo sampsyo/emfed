@@ -19,10 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-      - run: deno install -qAf https://deno.land/x/packup@v0.2.4/cli.ts
+      - name: install esbuild
+        run: curl -fsSL https://esbuild.github.io/dl/latest | sh
       - uses: actions/configure-pages@v3
       - run: make site
       - uses: actions/upload-pages-artifact@v2
