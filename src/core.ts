@@ -1,5 +1,5 @@
-import { Toot, getToots } from "./client.ts";
-import DOMPurify from "https://esm.sh/dompurify@3";
+import { Toot, getToots } from "./client.js";
+import DOMPurify from "dompurify";
 
 /**
  * A wrapped string that indicates that it's safe to include in HTML without

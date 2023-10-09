@@ -1,2 +1,2 @@
-import { loadAll } from "./core.ts";
+import { loadAll } from "./core.js";
 loadAll();

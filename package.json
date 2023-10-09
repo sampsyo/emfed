@@ -10,9 +10,13 @@
   "main": "dist/emfed.js",
   "type": "module",
   "scripts": {
-    "prepack": "esbuild --outdir=dist src/*.ts"
+    "prepack": "tsc"
   },
   "devDependencies": {
-    "esbuild": "^0.19.2"
+    "@types/dompurify": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "dompurify": "^3.0.6"
   }
 }
