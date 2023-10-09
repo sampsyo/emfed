@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: install esbuild
-        run: curl -fsSL https://esbuild.github.io/dl/latest | sh
+        run: |
+          curl -fsSL https://esbuild.github.io/dl/latest | sh
+          mv esbuild $HOME/.local/bin
       - uses: actions/configure-pages@v3
       - run: make site
       - uses: actions/upload-pages-artifact@v2
