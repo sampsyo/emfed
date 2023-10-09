@@ -19,7 +19,7 @@ Emfed generates some pretty basic markup for the feed.
 You probably want to style it to look like a proper social media feed, which you can do with plain ol' CSS scoped to the `.toots` selector, or you can use its provided CSS (in your `<head>`):
 
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/sampsyo/emfed@1/toots.css">
+          href="https://esm.sh/emfed@1/toots.css">
 
 You can customize the feed with `data-` attributes:
 
