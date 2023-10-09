@@ -17,6 +17,8 @@ site: index.html toots.css $(SRC)
 	rm -rf $@
 	mkdir -p $@
 	cp index.html toots.css $@
+	which esbuild
+	file `which esbuild`
 	esbuild --outdir=site --bundle $(SRC)
 
 # Auto-rebuild and serve the site, for development.
