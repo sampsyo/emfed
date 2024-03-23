@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "dom", "dom.iterable"]
+    "strict": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist"
   }
 }

@@ -18,12 +18,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
-      - run: npm install --global esbuild
-      - uses: actions/configure-pages@v2
+      - name: install esbuild
+        run: |
+          curl -fsSL https://esbuild.github.io/dl/latest | sh
+          mkdir -p $HOME/.local/bin
+          mv esbuild $HOME/.local/bin
+      - uses: actions/configure-pages@v3
+      - run: npm install
       - run: make site
-      - uses: actions/upload-pages-artifact@v1
+      - uses: actions/upload-pages-artifact@v2
         with:
           path: site
   deploy:

@@ -1,17 +1,27 @@
-.PHONY: all dev
+SRC := src/emfed.ts src/client.ts src/core.ts
 
-all: emfed.js
+.PHONY: all dev site check clean
 
-dev:
-	packup index.html
+all:
+	esbuild --outdir=dist $(SRC)
 
-%.js: %.ts
-	esbuild --minify $^ > $@
+check:
+	tsc --noEmit
 
-%.bundle.js: %.ts
-	deno bundle --config tsconfig.json $^ > $@
+# A bundled & minified version, if you want that.
+dist/emfed.bundle.js: $(SRC)
+	esbuild --bundle --minify --outfile=dist/emfed.bundle.js src/emfed.ts
 
-site: emfed.js index.html toots.css
+# The public site, for publishing to GitHub Pages.
+site: index.html toots.css $(SRC)
+	rm -rf $@
 	mkdir -p $@
-	cp $^ $@
-	sed -i -e 's/\.ts/.js/g' site/index.html
+	cp index.html toots.css $@
+	esbuild --outdir=site --bundle $(SRC)
+
+# Auto-rebuild and serve the site, for development.
+dev: site
+	esbuild --outdir=site --bundle $(SRC) --servedir=site
+
+clean:
+	rm -rf dist site

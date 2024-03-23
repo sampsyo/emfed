@@ -13,13 +13,13 @@ To use it, put a special link like this where you want the feed to appear:
 
 Then include the JavaScript (probably at the end of your `<body>`):
 
-    <script type="module" src="https://esm.sh/emfed"></script>
+    <script type="module" src="https://esm.sh/emfed@1"></script>
 
 Emfed generates some pretty basic markup for the feed.
 You probably want to style it to look like a proper social media feed, which you can do with plain ol' CSS scoped to the `.toots` selector, or you can use its provided CSS (in your `<head>`):
 
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/sampsyo/emfed@1/toots.css">
+          href="https://esm.sh/emfed@1/toots.css">
 
 You can customize the feed with `data-` attributes:
 
@@ -36,14 +36,11 @@ Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid maliciou
 Hacking
 -------
 
-An easy way to work with the code is with the [Packup][] bundler for [Deno][].
 Type `make dev` to serve an example page.
 
 Some missing features you might be interested in contributing include rendering media beyond static images (GIFs, videos, and audio), using a [BlurHash][] placeholder before media has loaded, and optionally filtering out replies or boosts.
 
 [BlurHash]: https://blurha.sh/
-[deno]: https://deno.land/
-[packup]: https://packup.deno.dev/
 
 Alternatives
 ------------
@@ -55,6 +52,9 @@ Alternatives
 Changelog
 ---------
 
+* v1.4.2: Switch to a more "normal" build process.
+* v1.4.1: Fix npm publication.
+* v1.4.0: Split into multiple submodules, which also lets you avoid automatic transformation.
 * v1.3.0: Drop the dependency on [Mustache][]. Fix a bug where, on some browsers, the `data-*` attributes would not work (so we'd always use the default configuration).
 * v1.2.0: Display image attachments.
 * v1.1.0: Display boosts (reblogs) correctly.

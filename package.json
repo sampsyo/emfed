@@ -1,14 +1,22 @@
 {
   "name": "emfed",
-  "version": "1.3.0",
+  "version": "1.4.2",
   "description": "embed a Mastodon feed in a webpage",
+  "license": "Unlicense",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sampsyo/emfed.git"
+  },
   "main": "dist/emfed.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild --outdir=dist emfed.ts",
-    "prepack": "esbuild --outdir=dist emfed.ts"
+    "prepack": "tsc"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "esbuild": "^0.15.16"
+    "dompurify": "^3.0.6"
   }
 }
