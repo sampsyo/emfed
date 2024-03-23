@@ -51,7 +51,7 @@ h1 a:hover {
       in-browser way to embed
       <a href="https://joinmastodon.org">Mastodon</a>
       feeds into webpages.
-      To make a feed like the one on this page, you use simple markup like
+      To make a feed like the one on the top, right of this page, you use simple markup like
       this:</p>
 <pre>&lt;a class="mastodon-feed"
    href="https://mastodon.social/@Mastodon"
@@ -63,6 +63,14 @@ h1 a:hover {
       it yourself, however you like):</p>
 <pre>&lt;link rel="stylesheet" type="text/css"
     href="https://esm.sh/emfed@1/toots.css"></pre>
+    
+    <p>To make embed a post and reply like the right of thie page you can use simple markup like this:</p>
+    <pre>
+      &lt;a class="mastodon-post-and-replies"
+        href="https://mastodon.social/@Mastodon"
+        data-toot-id="112011697087209298"
+        >Replies to my toot&lt;/a>
+    </pre>
     <p>One place you can see Emfed in action is at the
     <a href="https://beets.io">beets project</a>.
     The <a href="https://github.com/sampsyo/emfed">code</a> is
@@ -71,11 +79,17 @@ h1 a:hover {
       <a href="https://github.com/sampsyo/emfed">README</a>.</p>
     </main>
     <aside>
+      <h3>Mastodon feed for account</h3>
       <a class="mastodon-feed"
-         href="https://mastodon.social/@Mastodon"
-         data-toot-limit="4"
-         data-toot-account-id="13179"
+        href="https://mastodon.social/@Mastodon"
+        data-toot-limit="4"
+        data-toot-account-id="13179"
          >@Mastodon@mastodon.social</a>
+      <h3>Mastodon post with replies</h3>
+      <a class="mastodon-post-and-replies"
+        href="https://mastodon.social/@Mastodon"
+        data-toot-id="112011697087209298"
+        >Replies to my toot</a>
     </aside>
     <script type="module" src="emfed.js"></script>
   </body>
