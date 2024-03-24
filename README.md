@@ -75,6 +75,7 @@ Alternatives
 Changelog
 ---------
 
+* v1.5.0: Add a mode to embed a single post and its replies.
 * v1.4.2: Switch to a more "normal" build process.
 * v1.4.1: Fix npm publication.
 * v1.4.0: Split into multiple submodules, which also lets you avoid automatic transformation.
