@@ -61,3 +61,31 @@ export async function getToots(
 
   return await (await fetch(tootURL)).json();
 }
+
+
+export async function getPostAndReplyToots(
+  userURL: string,
+  id: string,
+  excludeReplies?: boolean,
+  excludePost?: boolean,
+): Promise<Toot[]> {
+  let toots: Array<Toot> = [];
+
+  if (excludePost === false) {
+    // fetch Toot
+    const tootURL = Object.assign(new URL(userURL), {
+      pathname: `/api/v1/statuses/${id}`
+    });
+    toots = [(await (await fetch(tootURL)).json())]
+  }
+
+  if (excludeReplies === false) {
+    // fetch replyToots
+    const replyTootURL = Object.assign(new URL(userURL), {
+      pathname: `/api/v1/statuses/${id}/context`
+    });
+
+    toots = [...toots, ...(await (await fetch(replyTootURL)).json())['descendants']];
+  }
+  return toots;
+}
