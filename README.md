@@ -33,29 +33,28 @@ Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid maliciou
 [eftm]: https://atp.fm/115
 [DOMPurify]: https://github.com/cure53/DOMPurify
 
-Embedding single posts and replies
-----------------------------------
+Embed a Post and Its Replies
+----------------------------
 
-You can also embed individual posts and its replies. There are options to exclude the post itself and just show replies. Or 
-exclude the replies and show the just the post.
+You can also embed an individual post, the replies to a post, or both.
+This mode lets you use Fediverse replies as a comment system for static sites, inspired by [a blog post from Carl Schwan][reply-post].
 
-This functionality was added to support embedding comments on static sites and was inspired by 
-inspired by Carl Schwan's post here: https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/
-
-To embed a single post and its responses put a special link where you want it to appear:
+Use this to embed a post:
 
     <a class="mastodon-post-and-replies"
        href="https://mastodon.social/@Mastodon"
        data-toot-id="112011697087209298"
        >Post and replies from the Fediverse</a>
 
+By default, both the original post and the replies appear.
 You can customize this link with `data-` attributes:
 
-* `data-exclude-replies`: "true" or "false" according to whether or not you'd like to exclude replies. The default behavior is that replies are included.
-* `data-exclude-post`:"true" or "false" according to whether or not you'd like to exclude the post itself. The default behavior is that the is included. Excluding the post supports behavior described in Carl Schwan's post mentioned above to add comments to a static web page.
+* `data-exclude-replies`: Set to `true` to exclude the replies.
+* `data-exclude-post`: Set to `true` to exclude the post, leaving just the replies. This may be more appropriate for the blog-comments use case [mentioned above][reply-post].
 
-Note that `mastodon-post-and-replies` style links and behavior employ the exact styling mechanisms as the standard feed so all CSS
-stylings and links work the same.
+This mode uses the same style of markup as the user feed, so you can use the same CSS to provide style for these embedded posts.
+
+[reply-post]: https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/
 
 Hacking
 -------
