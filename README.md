@@ -47,7 +47,7 @@ Alternatives
 
 * [Mastofeed](https://www.mastofeed.com): A server-side iframe-embeddable feed generator.
 * [Fedifeed](https://fedifeed.com): Like Mastofeed, but for other ActivityPub software too.
-* [untitled embed script from idotj](https://gitlab.com/idotj/mastodon-embed-feed-timeline): Also client-side. I wanted something with secure HTML embedding, automatic username lookup, and simpler URL-based configuration.
+* [Mastodon embed timeline from idotj](https://gitlab.com/idotj/mastodon-embed-timeline): Also client-side. I wanted something with secure HTML embedding, automatic username lookup, and simpler URL-based configuration.
 
 Changelog
 ---------
