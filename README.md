@@ -39,12 +39,12 @@ Embed a Post and Its Replies
 You can also embed an individual post, the replies to a post, or both.
 This mode lets you use Fediverse replies as a comment system for static sites, inspired by [a blog post from Carl Schwan][reply-post].
 
-Use this to embed a post:
+Use this to embed a post along with its responses:
 
-    <a class="mastodon-post-and-replies"
+    <a class="mastodon-thread"
        href="https://mastodon.social/@Mastodon"
        data-toot-id="112011697087209298"
-       >Post and replies from the Fediverse</a>
+       >Thread from the Fediverse</a>
 
 By default, both the original post and the replies appear.
 You can customize this link with `data-` attributes:

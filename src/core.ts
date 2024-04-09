@@ -163,6 +163,6 @@ export async function loadTootPostAndReplies(element: Element) {
 export function loadAll() {
   document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
  /* inspired by https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/ */  
- document.querySelectorAll("a.mastodon-post-and-replies").forEach(loadTootPostAndReplies)
+ document.querySelectorAll("a.mastodon-thread").forEach(loadTootPostAndReplies)
 
 }
