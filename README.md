@@ -33,6 +33,29 @@ Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid maliciou
 [eftm]: https://atp.fm/115
 [DOMPurify]: https://github.com/cure53/DOMPurify
 
+Embed a Post and Its Replies
+----------------------------
+
+You can also embed an individual post, the replies to a post, or both.
+This mode lets you use Fediverse replies as a comment system for static sites, inspired by [a blog post from Carl Schwan][reply-post].
+
+Use this to embed a post along with its responses:
+
+    <a class="mastodon-thread"
+       href="https://mastodon.social/@Mastodon"
+       data-toot-id="112011697087209298"
+       >Thread from the Fediverse</a>
+
+By default, both the original post and the replies appear.
+You can customize this link with `data-` attributes:
+
+* `data-exclude-replies`: Set to `true` to exclude the replies.
+* `data-exclude-post`: Set to `true` to exclude the post, leaving just the replies. This may be more appropriate for the blog-comments use case [mentioned above][reply-post].
+
+This mode uses the same style of markup as the user feed, so you can use the same CSS to provide style for these embedded posts.
+
+[reply-post]: https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/
+
 Hacking
 -------
 
@@ -52,6 +75,7 @@ Alternatives
 Changelog
 ---------
 
+* v1.5.0: Add a mode to embed a single post and its replies.
 * v1.4.2: Switch to a more "normal" build process.
 * v1.4.1: Fix npm publication.
 * v1.4.0: Split into multiple submodules, which also lets you avoid automatic transformation.

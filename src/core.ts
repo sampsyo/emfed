@@ -1,4 +1,4 @@
-import { Toot, getToots } from "./client.js";
+import { Toot, getToots, getPostAndReplyToots } from "./client.js";
 import DOMPurify from "dompurify";
 
 /**
@@ -137,9 +137,32 @@ export async function loadToots(element: Element) {
   }
 }
 
+export async function loadTootPostAndReplies(element: Element) {
+  const el = element as HTMLAnchorElement;
+  const toots = await getPostAndReplyToots(
+    el.href,
+    String(el.dataset.tootId),
+    el.dataset.excludeReplies === "true",
+    el.dataset.excludePost === "true",
+  );
+
+  // Construct the HTML content.
+  const replies = document.createElement("ol");
+  replies.classList.add("toots");
+  el.replaceWith(replies);
+  for (const toot of toots) {
+    const html = renderToot(toot);
+    replies.insertAdjacentHTML("beforeend", html);
+  }  
+}
+
+
 /**
  * Transform all links on the page marked with the `mastodon-feed` class.
  */
 export function loadAll() {
   document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
+ /* inspired by https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/ */  
+ document.querySelectorAll("a.mastodon-thread").forEach(loadTootPostAndReplies)
+
 }
