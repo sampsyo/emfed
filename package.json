@@ -5,7 +5,7 @@
   "license": "Unlicense",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sampsyo/emfed.git"
+    "url": "git+https://github.com/sampsyo/emfed.git"
   },
   "main": "dist/emfed.js",
   "type": "module",
