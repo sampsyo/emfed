@@ -30,6 +30,7 @@ export async function getToots(
   accountId?: string,
   limit?: number,
   excludeReplies?: boolean,
+  excludeReblogs?: boolean
 ): Promise<Toot[]> {
   const url = new URL(userURL);
 
@@ -56,7 +57,7 @@ export async function getToots(
   // Fetch toots.
   const tootURL = Object.assign(new URL(url), {
     pathname: `/api/v1/accounts/${userId}/statuses`,
-    search: `?limit=${limit ?? 5}&exclude_replies=${!!excludeReplies}`,
+    search: `?limit=${limit ?? 5}&exclude_replies=${!!excludeReplies}&exclude_reblogs=${!!excludeReblogs}`,
   });
 
   return await (await fetch(tootURL)).json();

@@ -125,6 +125,7 @@ export async function loadToots(element: Element) {
     el.dataset.tootAccountId,
     Number(el.dataset.tootLimit ?? 5),
     el.dataset.excludeReplies === "true",
+    el.dataset.excludeReblogs === "true",
   );
 
   // Construct the HTML content.
@@ -162,7 +163,6 @@ export async function loadTootPostAndReplies(element: Element) {
  */
 export function loadAll() {
   document.querySelectorAll("a.mastodon-feed").forEach(loadToots);
- /* inspired by https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/ */  
- document.querySelectorAll("a.mastodon-thread").forEach(loadTootPostAndReplies)
-
+  /* inspired by https://carlschwan.eu/2020/12/29/adding-comments-to-your-static-blog-with-mastodon/ */  
+  document.querySelectorAll("a.mastodon-thread").forEach(loadTootPostAndReplies)
 }
