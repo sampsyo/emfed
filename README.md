@@ -76,6 +76,7 @@ Alternatives
 Changelog
 ---------
 
+* v1.6.0: A new `data-exclude-reblogs` config option for hiding boosts.
 * v1.5.0: Add a mode to embed a single post and its replies.
 * v1.4.2: Switch to a more "normal" build process.
 * v1.4.1: Fix npm publication.

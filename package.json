@@ -1,6 +1,6 @@
 {
   "name": "emfed",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "embed a Mastodon feed in a webpage",
   "license": "Unlicense",
   "repository": {
