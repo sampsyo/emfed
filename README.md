@@ -26,7 +26,13 @@ You can customize the feed with `data-` attributes:
 * `data-toot-limit`: The maximum number of toots to display.
 * `data-toot-account-id`: Emfed needs to make an extra API request to translate your human-readable username (like `@Mastodon`) into an internal ID (like 13179) before it can look up your toots. If you have [empathy for the machine][eftm], you can make everything faster by specifying the ID directly here.
 * `data-exclude-replies`: "true" or "false" according to whether or not you'd like to exclude replies. The default behavior is that replies are included.
+* `data-exclude-self-replies`: "true" or "false" according to whether or not you'd like to exclude replies to its own account. The default behavior is that replies are included. This is a workaround for https://github.com/mastodon/mastodon/pull/23257 as that won't be fixed. If self-replies get filtered out, the amount of displayed toots is reduced.
 * `data-exclude-reblogs`: "true" or "false" according to whether or not you'd like to exclude reblogs/boosts. The default behavior is that reblogs/boosts are included.
+
+You can customize how the feed is rendered with further `data-` attributes:
+
+* `data-locale`: Locale to render the date of each toot. The default behavior is that the webbrowsers locale will be taken. Should that not be available, `en-US` will be used as a fallback.
+* `data-ts_format`: JSON object to define how to render the date. The default object is `'{"month": "long", "day": "numeric"}'`. Please be sure to use double quotes within the JSON string.
 
 Emfed sanitizes the HTML contents of toots using [DOMPurify][] to avoid malicious markup and XSS attacks.
 

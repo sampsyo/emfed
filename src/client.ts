@@ -4,6 +4,7 @@
 export interface Toot {
   created_at: string;
   in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
   content: string;
   url: string;
   account: {

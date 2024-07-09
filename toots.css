@@ -10,29 +10,78 @@
   padding: 1rem;
 }
 
-/* Posting user. */
-.toot .user {
+/* Boosting user is smaller and above the posting user/header. */
+.toot .boost {
+  height: 23px;
+  margin-bottom: 0.25rem;
+  column-gap: 0.25rem;
+  font-size: 0.8em;
+  color: #999;
+}
+
+.toot .boost:before {
+  content: "🔁"; /* changed from "♺" */
+}
+
+.toot .boost::after {
+  content: "boosted"; /* More inline with how mainstream Mastodon instances look */
+}
+
+.toot .boost .username {
+  display: none;
+}
+
+.toot .toot-header {
   display: flex;
-  flex-flow: column wrap;
-  justify-content: space-evenly;
+  flex-flow: row-reverse wrap;
+  gap: 10px;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.toot .toot-header .permalink {
+  display: block;
+  float: unset;
+  text-align: right;
+  text-decoration: none;
+  color: #999;
+}
+
+.toot .toot-header .permalink:hover {
+  text-decoration: underline;
+}
+
+/* Posting user. */
+.toot .toot-header .user {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
   align-content: flex-start;
   height: 46px;  /* Avatar height. */
   column-gap: 0.5rem;
 
+  text-align: left;
   text-decoration: none;
   color: inherit;
 }
 
-.toot .avatar {
+.toot .toot-header .user .user-display {
+  display: flex;
+  flex-flow: column nowrap;
+  text-wrap: nowrap;
+}
+
+.toot .toot-header .user .avatar {
   border-radius: 4px;
 }
 
-.toot .display-name {
+.toot .toot-header .user .user-display .display-name {
   font-weight: bold;
   display: block;
 }
 
-.toot .user:hover .display-name {
+.toot .toot-header .user:hover .display-name {
   text-decoration: underline;
 }
 
@@ -40,33 +89,6 @@
   display: block;
   margin-right: 1em;
   color: #999;
-}
-
-/* Boosting user is smaller and above the posting user. */
-.toot .boost {
-  height: 23px;
-  margin-bottom: 0.25rem;
-  column-gap: 0.25rem;
-}
-
-.toot .boost:before {
-  content: "♺";
-  font-size: 140%;
-}
-
-.toot .boost .username {
-  display: none;
-}
-
-.toot .permalink {
-  text-decoration: none;
-  display: block;
-  color: #999;
-  float: right;
-}
-
-.toot .permalink:hover {
-  text-decoration: underline;
 }
 
 .toot .body {
