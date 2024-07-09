@@ -2,6 +2,22 @@ import { Toot, getToots, getPostAndReplyToots } from "./client.js";
 import DOMPurify from "dompurify";
 
 /**
+ * Stores information from the `mastodon-feed` elements data attributes which affect the rendering of the toots.
+ */
+class RenderOptions {
+	locale: string;
+	ts_format: {};
+	
+	constructor (options: {
+		locale: string | undefined,
+		ts_format: string | undefined;
+	}) {
+		this.locale = !!options.locale ? options.locale : !!window.navigator.languages[0] ? window.navigator.languages[0] : "en-US"
+		this.ts_format = !!options.ts_format ? JSON.parse(options.ts_format) : {month: 'short', day: 'numeric'};
+	}
+}
+
+/**
  * A wrapped string that indicates that it's safe to include in HTML without
  * escaping.
  */
@@ -63,7 +79,7 @@ function html(strings: TemplateStringsArray, ...subs: TmpVal[]): SafeString {
 /**
  * Render a single toot object as an HTML string.
  */
-function renderToot(toot: Toot): string {
+function renderToot(toot: Toot, renderOptions: RenderOptions): string {
   // Is this a boost (reblog)?
   let boost = null;
   if (toot.reblog) {
@@ -76,40 +92,46 @@ function renderToot(toot: Toot): string {
     toot = toot.reblog; // Show the "inner" toot instead.
   }
 
-  const date = new Date(toot.created_at).toLocaleString();
+  const date = new Date(toot.created_at);
   const images = toot.media_attachments.filter((att) => att.type === "image");
 
   return html`<li class="toot">
-    <a class="permalink" href="${toot.url}">
-      <time datetime="${toot.created_at}">${date}</time>
-    </a>
     ${boost &&
     html` <a class="user boost" href="${boost.user_url}">
       <img class="avatar" width="23" height="23" src="${boost.avatar}" />
       <span class="display-name">${boost.display_name}</span>
       <span class="username">@${boost.username}</span>
     </a>`}
-    <a class="user" href="${toot.account.url}">
-      <img class="avatar" width="46" height="46" src="${toot.account.avatar}" />
-      <span class="display-name">${toot.account.display_name}</span>
-      <span class="username">@${toot.account.username}</span>
-    </a>
+    <div class="toot-header">
+      <a class="permalink" href="${toot.url}">
+        <time datetime="${toot.created_at}" title="${date.toLocaleString(renderOptions.locale)}">${date.toLocaleString(renderOptions.locale, renderOptions.ts_format)}</time>
+      </a>
+      <a class="user" href="${toot.account.url}">
+        <img class="avatar" width="46" height="46" src="${toot.account.avatar}" />
+        <div class="user-display">
+          <span class="display-name">${toot.account.display_name}</span>
+          <span class="username">@${toot.account.username}</span>
+        </div>
+      </a>
+    </div>
     <div class="body">${safe(DOMPurify.sanitize(toot.content))}</div>
-    ${images.map(
-      (att) =>
-        html` <a
-          class="attachment"
-          href="${att.url}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
+	<div class="attachments">
+      ${images.map(
+        (att) =>
+          html` <a
             class="attachment"
-            src="${att.preview_url}"
-            alt="${att.description}"
-          />
-        </a>`,
+            href="${att.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="attachment"
+              src="${att.preview_url}"
+              alt="${att.description}"
+            />
+          </a>`,
     )}
+    </div>
   </li>`.toString();
 }
 
@@ -120,20 +142,25 @@ function renderToot(toot: Toot): string {
 export async function loadToots(element: Element) {
   // Fetch toots based on the element's `data-toot-*` attributes.
   const el = element as HTMLAnchorElement;
-  const toots = await getToots(
+  const toots = (await getToots(
     el.href,
     el.dataset.tootAccountId,
     Number(el.dataset.tootLimit ?? 5),
     el.dataset.excludeReplies === "true",
     el.dataset.excludeReblogs === "true",
-  );
+  )).filter(t => el.dataset.excludeSelfReplies === "true" && t.in_reply_to_account_id != null ? false : true );
+
+  const renderOptions = new RenderOptions({
+	locale: el.dataset.locale,
+	ts_format: el.dataset.ts_format
+  });
 
   // Construct the HTML content.
   const list = document.createElement("ol");
   list.classList.add("toots");
   el.replaceWith(list);
   for (const toot of toots) {
-    const html = renderToot(toot);
+    const html = renderToot(toot, renderOptions);
     list.insertAdjacentHTML("beforeend", html);
   }
 }
@@ -147,12 +174,17 @@ export async function loadTootPostAndReplies(element: Element) {
     el.dataset.excludePost === "true",
   );
 
+  const renderOptions = new RenderOptions({
+	locale: el.dataset.locale,
+	ts_format: el.dataset.ts_format
+  });
+
   // Construct the HTML content.
   const replies = document.createElement("ol");
   replies.classList.add("toots");
   el.replaceWith(replies);
   for (const toot of toots) {
-    const html = renderToot(toot);
+    const html = renderToot(toot, renderOptions);
     replies.insertAdjacentHTML("beforeend", html);
   }  
 }
