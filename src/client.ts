@@ -90,3 +90,26 @@ export async function getPostAndReplyToots(
   }
   return toots;
 }
+
+export async function getEmojiMap(
+  instanceURL: string
+): Promise<Record<string, string>> {
+  const url = new URL(instanceURL);
+  url.pathname = "/api/v1/custom_emojis"; // https://docs.joinmastodon.org/methods/custom_emojis/#get
+  const emojiList: { shortcode: string; url: string }[] =
+    await (await fetchWithTimeout(url)).json();
+
+  return Object.fromEntries(emojiList.map(({ shortcode, url }) => [shortcode, url]));
+}
+
+// Waits 2 seconds for an API response
+async function fetchWithTimeout(url: URL, ms = 2000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  }
+  finally {
+    clearTimeout(timer);
+  }
+}
